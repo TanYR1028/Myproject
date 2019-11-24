@@ -9,6 +9,13 @@ import java.io.Serializable;
 public class Schedule implements Serializable {
 
 
+    public Schedule(String title, int coverResourceId, String remark, String deadline) {
+        this.title = title;
+        this.coverResourceId = coverResourceId;
+        this.remark = remark;
+        this.deadline = deadline;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -36,9 +43,15 @@ public class Schedule implements Serializable {
     private int coverResourceId;
     private String remark;
 
-    public Schedule(String title, int coverResourceId, String remark) {
-        this.title = title;
-        this.coverResourceId = coverResourceId;
-        this.remark = remark;
+    public String getDeadline() {
+        return deadline;
     }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    private String deadline;
+
+
 }

@@ -36,12 +36,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final int CONTEXT_MENU_DELETE = 1;
     public static final int CONTEXT_MENU_UPDATE = CONTEXT_MENU_DELETE + 1;
-    public static final int REQUEST_CODE_UPDATE_SCHEDULE= 902;
-    public static final int REQUEST_CODE_NEW_SCHEDULE= 901;
+    public static final int REQUEST_CODE_UPDATE_SCHEDULE = 902;
+    public static final int REQUEST_CODE_NEW_SCHEDULE = 901;
     private ListView listViewSchedules;
     private ArrayList<Schedule> listSchedules = new ArrayList<>();
     private ScheduleAdapter scheduleAdapter;
     private FileDataSource fileDataSource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +55,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this,EditScheduleActivity.class);
-                startActivityForResult(intent,REQUEST_CODE_NEW_SCHEDULE);
+                Intent intent = new Intent(MainActivity.this, EditScheduleActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_NEW_SCHEDULE);
             }
         });
 
@@ -67,23 +68,24 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        listViewSchedules=(ListView)this.findViewById(R.id.listview);
-        scheduleAdapter= new ScheduleAdapter(MainActivity.this, R.layout.list_view_schedule, listSchedules);
+        listViewSchedules = (ListView) this.findViewById(R.id.listview);
+        scheduleAdapter = new ScheduleAdapter(MainActivity.this, R.layout.list_view_schedule, listSchedules);
         listViewSchedules.setAdapter(scheduleAdapter);
         this.registerForContextMenu(listViewSchedules);
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         fileDataSource.save();
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 
         super.onCreateContextMenu(menu, v, menuInfo);
-        if(v==findViewById(R.id.listview)){
-            // 获取适配器
+        if (v == findViewById(R.id.listview)) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
             //设置标题
             menu.setHeaderTitle(listSchedules.get(info.position).getTitle());
@@ -94,24 +96,25 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
+
     public boolean onContextItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
 
             case CONTEXT_MENU_UPDATE: {
-                AdapterView.AdapterContextMenuInfo menuInfo=(AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-                Schedule schedule=listSchedules.get(menuInfo.position);
+                AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                Schedule schedule = listSchedules.get(menuInfo.position);
 
-                Intent intent = new Intent(MainActivity.this,EditScheduleActivity.class);
-                intent.putExtra("edit_position",menuInfo.position);
-                intent.putExtra("schedule_title",schedule.getTitle());
-                intent.putExtra("schedule_remark",schedule.getRemark());
-                //startActivityForResult()方法是主活动BookListActivity用来启动NewBookActivity的
-                startActivityForResult(intent,REQUEST_CODE_UPDATE_SCHEDULE);
+                Intent intent = new Intent(MainActivity.this, EditScheduleActivity.class);
+                intent.putExtra("edit_position", menuInfo.position);
+                intent.putExtra("schedule_title", schedule.getTitle());
+                intent.putExtra("schedule_remark", schedule.getRemark());
+                //startActivityForResult()方法是主活动MainActivity用来启动EditScheduleActivity的
+                startActivityForResult(intent, REQUEST_CODE_UPDATE_SCHEDULE);
                 break;
             }
             case CONTEXT_MENU_DELETE: {
-                AdapterView.AdapterContextMenuInfo menuInfo=(AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-                final int itemPosition=menuInfo.position;
+                AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                final int itemPosition = menuInfo.position;
                 new android.app.AlertDialog.Builder(this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("询问")
@@ -137,19 +140,19 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onContextItemSelected(item);
     }
+
     @Override
     //onActivityResult（）是从NewBookActiviy回调到BookListActivity的
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode)
-        {
+        switch (requestCode) {
             case REQUEST_CODE_NEW_SCHEDULE:
-                if(resultCode==RESULT_OK)
-                {
-                    int position=data.getIntExtra("edit_position",0);
-                    String title=data.getStringExtra("schedule_title");
-                    String remark=data.getStringExtra("schedule_remark");
-                    getListSchedules().add(position, new Schedule(title, R.drawable.windwill, remark));
+                if (resultCode == RESULT_OK) {
+                    int position = data.getIntExtra("edit_position", 0);
+                    String title = data.getStringExtra("schedule_title");
+                    String remark = data.getStringExtra("schedule_remark");
+                    String deadline = data.getStringExtra("schedule_date");
+                    getListSchedules().add(position, new Schedule(title, R.drawable.windwill, remark, deadline));
                     //通知适配器已改变
                     scheduleAdapter.notifyDataSetChanged();
 
@@ -157,14 +160,16 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
             case REQUEST_CODE_UPDATE_SCHEDULE:
-                if(resultCode==RESULT_OK){
-                    int position=data.getIntExtra("edit_position",0);
-                    String title=data.getStringExtra("schedule_title");
-                    String remark=data.getStringExtra("schedule_remark");
-                    Schedule schedule= getListSchedules().get(position);
+                if (resultCode == RESULT_OK) {
+                    int position = data.getIntExtra("edit_position", 0);
+                    String title = data.getStringExtra("schedule_title");
+                    String remark = data.getStringExtra("schedule_remark");
+                    String deadline = data.getStringExtra("schedule_date");
+                    Schedule schedule = getListSchedules().get(position);
 
                     schedule.setTitle(title);
                     schedule.setRemark(remark);
+                    schedule.setDeadline(deadline);
                     //通知适配器已改变
                     scheduleAdapter.notifyDataSetChanged();
 
@@ -173,17 +178,19 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-    public List<Schedule> getListSchedules()
-    {
+
+    public List<Schedule> getListSchedules() {
         return listSchedules;
     }
+
     private void InitData() {
         fileDataSource = new FileDataSource(this);
         listSchedules = fileDataSource.load();
-        if(listSchedules.size()==0)
-            listSchedules.add(new Schedule("标题",R.drawable.windwill,"备注"));
+        if (listSchedules.size() == 0)
+            listSchedules.add(new Schedule("标题", R.drawable.windwill, "备注", "截至日期"));
 
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -234,12 +241,17 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_setting) {
 
+        } else if (id == R.id.nav_about) {
+
+        } else if (id == R.id.nav_help) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     public class ScheduleAdapter extends ArrayAdapter<Schedule> {
 
         private int resourceId;
@@ -260,9 +272,10 @@ public class MainActivity extends AppCompatActivity
 
             Schedule schedule_item = this.getItem(position);
             scheduleImage.setImageResource(schedule_item.getCoverResourceId());
-            scheduleTitle.setText(schedule_item.getTitle() + "\n" + schedule_item.getRemark());
+            scheduleTitle.setText(schedule_item.getTitle() + "\n" + schedule_item.getDeadline() + "\n" + schedule_item.getRemark());
 
             return item;
         }
     }
 }
+
