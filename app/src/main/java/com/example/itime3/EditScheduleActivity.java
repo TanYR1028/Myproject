@@ -46,7 +46,7 @@ private Button buttonCancel,buttonOk;
 
         initDateTime();
         initDateView();
-        now_riqi=date.append(String.valueOf(year)).append("年").append(String.valueOf(month)).append("月").append(day).append("日").toString();
+        now_riqi=date.append(String.valueOf(year)).append("年").append(String.valueOf(month+1)).append("月").append(day).append("日").toString();
 
 
         editText_beizhu=(EditText)findViewById(R.id.edit_text_remark);
@@ -199,7 +199,7 @@ private void setCycle(){
                 dialog.show();
 
                 //初始化日期监听事件
-                datePicker.init(year, month-1 , day, new DatePicker.OnDateChangedListener() {
+                datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
                     @Override
                     public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         EditScheduleActivity.this.year = year;
@@ -218,9 +218,9 @@ private void setCycle(){
     private void initDateView() {
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH)+1;
+        month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
         hour = calendar.get(Calendar.HOUR);
         minute = calendar.get(Calendar.MINUTE);
-    }//calendar.get(Calendar.MONTH)获取到的月份下标是从0开始的，值为0时表示一月份，1时表示二月份，以此类推，所以必须加上1。
+    }
 }
