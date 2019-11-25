@@ -78,9 +78,9 @@ public class MainActivity extends AppCompatActivity
                 Schedule schedule = listSchedules.get(position);
                 Bundle bundle = new Bundle();
                 bundle.putInt("photo",schedule.getCoverResourceId());
-                bundle.putString("message1",schedule.getTitle());
-                bundle.putString("message2",schedule.getDeadline());
-                bundle.putString("message3",schedule.getRemark());
+                bundle.putString("message_title",schedule.getTitle());
+                bundle.putString("message_deadline",schedule.getDeadline());
+                //bundle.putString("message_remark",schedule.getRemark());
                 Intent intent = new Intent();
                 intent.putExtras(bundle);
                 intent.setClass(MainActivity.this, Countdown.class);
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity
         fileDataSource = new FileDataSource(this);
         listSchedules = fileDataSource.load();
         if (listSchedules.size() == 0)
-            listSchedules.add(new Schedule("标题", R.drawable.windwill, "备注", "截至日期"));
+            listSchedules.add(new Schedule("标题", R.drawable.windwill, "备注", "2019年11月25日"));
 
     }
 

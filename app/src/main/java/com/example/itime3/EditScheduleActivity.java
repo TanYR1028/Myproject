@@ -43,9 +43,11 @@ private Button buttonCancel,buttonOk;
         context=this;
         date = new StringBuffer();
         time = new StringBuffer();
+
+        initDateTime();
         initDateView();
         now_riqi=date.append(String.valueOf(year)).append("年").append(String.valueOf(month)).append("月").append(day).append("日").toString();
-        initDateTime();
+
 
         editText_beizhu=(EditText)findViewById(R.id.edit_text_remark);
         editText_biaoti=(EditText)findViewById(R.id.edit_text_title);
@@ -178,7 +180,7 @@ private void setCycle(){
                         if (date.length() > 0) { //清除上次记录的日期
                             date.delete(0, date.length());
                         }
-                        dateView.setText(date.append(String.valueOf(year)).append("年").append(String.valueOf(month)).append("月").append(day).append("日"));
+                        dateView.setText(date.append(String.valueOf(year)).append("年").append(String.valueOf(month+1)).append("月").append(day).append("日"));
                         dialog.dismiss();
                     }
                 });
@@ -195,8 +197,9 @@ private void setCycle(){
                 dialog.setTitle("设置日期");
                 dialog.setView(dialogView);
                 dialog.show();
+
                 //初始化日期监听事件
-                datePicker.init(year, month - 1, day, new DatePicker.OnDateChangedListener() {
+                datePicker.init(year, month-1 , day, new DatePicker.OnDateChangedListener() {
                     @Override
                     public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         EditScheduleActivity.this.year = year;
@@ -204,16 +207,18 @@ private void setCycle(){
                         EditScheduleActivity.this.day = dayOfMonth;
                     }
                 });
-            }
+        }
         });
     }
+
+
     /**
      * 获取当前的日期和时间
      */
     private void initDateView() {
         Calendar calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH) + 1;
+        month = calendar.get(Calendar.MONTH)+1;
         day = calendar.get(Calendar.DAY_OF_MONTH);
         hour = calendar.get(Calendar.HOUR);
         minute = calendar.get(Calendar.MINUTE);
