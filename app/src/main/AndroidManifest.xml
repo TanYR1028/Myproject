@@ -21,6 +21,8 @@
         </activity>
       <activity android:name=".EditScheduleActivity" >
     </activity>
+    <activity android:name=".Countdown" >
+    </activity>
     </application>
 
 </manifest>

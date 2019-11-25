@@ -72,7 +72,22 @@ public class MainActivity extends AppCompatActivity
         scheduleAdapter = new ScheduleAdapter(MainActivity.this, R.layout.list_view_schedule, listSchedules);
         listViewSchedules.setAdapter(scheduleAdapter);
         this.registerForContextMenu(listViewSchedules);
+        listViewSchedules.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Schedule schedule = listSchedules.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putInt("photo",schedule.getCoverResourceId());
+                bundle.putString("message1",schedule.getTitle());
+                bundle.putString("message2",schedule.getDeadline());
+                bundle.putString("message3",schedule.getRemark());
+                Intent intent = new Intent();
+                intent.putExtras(bundle);
+                intent.setClass(MainActivity.this, Countdown.class);
+                startActivity(intent);
 
+            }
+        });
     }
 
     @Override
@@ -92,8 +107,6 @@ public class MainActivity extends AppCompatActivity
             //添加内容
             menu.add(0, CONTEXT_MENU_DELETE, 0, "删除");
             menu.add(0, CONTEXT_MENU_UPDATE, 0, "更新");
-
-
         }
     }
 
