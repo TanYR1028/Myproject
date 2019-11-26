@@ -32,7 +32,7 @@ private Button buttonCancel,buttonOk;
     private StringBuffer date, time;
     private int insertPosition;
     private Context context;
-    private String now_riqi;
+    private String now_riqi,now_time;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +47,7 @@ private Button buttonCancel,buttonOk;
         initDateTime();
         initDateView();
         now_riqi=date.append(String.valueOf(year)).append("年").append(String.valueOf(month+1)).append("月").append(day).append("日").toString();
-
+        now_time=time.append(String.valueOf(hour)).append("时").append(String.valueOf(minute)).append("分").toString();
 
         editText_beizhu=(EditText)findViewById(R.id.edit_text_remark);
         editText_biaoti=(EditText)findViewById(R.id.edit_text_title);
@@ -74,10 +74,17 @@ private Button buttonCancel,buttonOk;
                     intent.putExtra("edit_position", insertPosition);
                     intent.putExtra("schedule_title", editText_biaoti.getText().toString());
                     intent.putExtra("schedule_remark", editText_beizhu.getText().toString());
-                    if(dateView.getText().toString().equals("长按使用日期计算器"))
+                    if(dateView.getText().toString().equals("长按使用日期计算器")) {
                         intent.putExtra("schedule_date", now_riqi);
-                    else
+                        intent.putExtra("schedule_time",now_time);
+                    }
+                    else {
                         intent.putExtra("schedule_date", dateView.getText().toString());
+                        if(timeView.getText().toString().equals(""))
+                            intent.putExtra("schedule_time",now_time);
+                       else
+                           intent.putExtra("schedule_time",timeView.getText().toString());
+                    }
                     setResult(RESULT_OK, intent);
                     EditScheduleActivity.this.finish();
                 }

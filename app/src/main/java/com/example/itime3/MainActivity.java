@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity
                 bundle.putInt("photo",schedule.getCoverResourceId());
                 bundle.putString("message_title",schedule.getTitle());
                 bundle.putString("message_deadline",schedule.getDeadline());
+                bundle.putString("message_time",schedule.getDdl_time());
                 //bundle.putString("message_remark",schedule.getRemark());
                 Intent intent = new Intent();
                 intent.putExtras(bundle);
@@ -165,7 +166,8 @@ public class MainActivity extends AppCompatActivity
                     String title = data.getStringExtra("schedule_title");
                     String remark = data.getStringExtra("schedule_remark");
                     String deadline = data.getStringExtra("schedule_date");
-                    getListSchedules().add(position, new Schedule(title, R.drawable.windwill, remark, deadline));
+                    String time=data.getStringExtra("schedule_time");
+                    getListSchedules().add(position, new Schedule(title, R.drawable.windwill, remark, deadline,time));
                     //通知适配器已改变
                     scheduleAdapter.notifyDataSetChanged();
 
@@ -178,11 +180,13 @@ public class MainActivity extends AppCompatActivity
                     String title = data.getStringExtra("schedule_title");
                     String remark = data.getStringExtra("schedule_remark");
                     String deadline = data.getStringExtra("schedule_date");
+                    String time=data.getStringExtra("schedule_time");
                     Schedule schedule = getListSchedules().get(position);
 
                     schedule.setTitle(title);
                     schedule.setRemark(remark);
                     schedule.setDeadline(deadline);
+                    schedule.setDdl_time(time);
                     //通知适配器已改变
                     scheduleAdapter.notifyDataSetChanged();
 
@@ -199,8 +203,8 @@ public class MainActivity extends AppCompatActivity
     private void InitData() {
         fileDataSource = new FileDataSource(this);
         listSchedules = fileDataSource.load();
-        if (listSchedules.size() == 0)
-            listSchedules.add(new Schedule("标题", R.drawable.windwill, "备注", "2019年11月25日"));
+        //if (listSchedules.size() == 0)
+          //  listSchedules.add(new Schedule("标题", R.drawable.windwill, "备注", "2019年11月25日","0时0分"));
 
     }
 

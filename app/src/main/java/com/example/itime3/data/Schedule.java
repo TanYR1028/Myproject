@@ -8,12 +8,29 @@ import java.io.Serializable;
 
 public class Schedule implements Serializable {
 
+    private String title;
+    private int coverResourceId;
+    private String remark;
+    private String deadline;
 
-    public Schedule(String title, int coverResourceId, String remark, String deadline) {
+    public String getDdl_time() {
+        return ddl_time;
+    }
+
+    public void setDdl_time(String ddl_time) {
+        this.ddl_time = ddl_time;
+    }
+
+    private  String ddl_time;
+
+
+
+    public Schedule(String title, int coverResourceId, String remark, String deadline, String ddl_time) {
         this.title = title;
         this.coverResourceId = coverResourceId;
         this.remark = remark;
         this.deadline = deadline;
+        this.ddl_time = ddl_time;
     }
 
     public String getTitle() {
@@ -39,9 +56,7 @@ public class Schedule implements Serializable {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-    private String title;
-    private int coverResourceId;
-    private String remark;
+
 
     public String getDeadline() {
         return deadline;
@@ -50,8 +65,5 @@ public class Schedule implements Serializable {
     public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
-
-    private String deadline;
-
 
 }
